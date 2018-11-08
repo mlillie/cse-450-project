@@ -46,7 +46,8 @@ DOCTOR_ILLNESS_WEIGHT = 0.60
 DOCTOR_AGE_WEIGHT = 0.10
 DOCTOR_PREFERRED_PATIENT_WEIGHT = 0.30
 
-
+# Created by Matthew Lillie
+# Last edit: 11/08/18
 class Algorithm:
 
     def matching_algorithm(self, doctor_preference_list, patient_preference_list):
@@ -84,11 +85,9 @@ class Algorithm:
 
                 doctor_pref_percentages[doctor_id] = doctor_pref_percentages[doctor_id] + [percentage]
 
-        for doctor_id in doctor_pref.keys():
-            for patient_id in patient_pref.keys():
+                # Now do the patient percentage calculations
+
                 patient_pref_doc_ids = list(map(int, patient_pref[patient_id][0]))
-                # TEMPORARY FIX
-                # patient_pref_doc_ids[:] = [x - 1 for x in patient_pref_doc_ids]
                 patient_pref_doc_ids_length = len(patient_pref_doc_ids)
                 patient_pref_gender = list(map(int, patient_pref[patient_id][1]))
                 patient_pref_gender_length = len(patient_pref_gender)
@@ -115,3 +114,4 @@ class Algorithm:
 
         print(doctor_pref_percentages)
         print(patient_pref_percentages)
+        return patient_pref_percentages, doctor_pref_percentages
