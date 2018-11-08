@@ -1,4 +1,4 @@
-import pandas as panda
+from algorithm import Algorithm
 
 if __name__ == '__main__':
-    print("installed pandas")
+    Algorithm().calculate_percentages()

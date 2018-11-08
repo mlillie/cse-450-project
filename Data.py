@@ -6,8 +6,9 @@ import os
 
 
 class Data:
+
     def read(self):
-        path = os.getcwd() + "\\test_cases\examplesample.xlsx"
+        path = os.getcwd() + "\\test_cases\Sample1.xlsx"
 
         wb = xlrd.open_workbook(path)
         sheet = wb.sheet_by_index(0)
@@ -46,7 +47,7 @@ class Data:
                 patient_pref[j-1] = (pt1, pt2, age_range)
 
                 # Doctor's assigned values
-                doctor_values[j-1] = sheet.row_values(j, 7, 10)
+                doctor_values[j - 1] = sheet.row_values(j, 6, 9)
 
                 # Doctor's preference
                 """
@@ -69,5 +70,9 @@ class Data:
                 # adds preferences to dictionary
                 doctor_pref[j - 1] = (dt1, age_range, dt3)
 
-        return patient_values, patient_pref, doctor_values, doctor_pref
+        # print (patient_values)
+        # print(patient_pref)
+        # print(doctor_values)
+        # print(doctor_pref)
 
+        return patient_values, patient_pref, doctor_values, doctor_pref
