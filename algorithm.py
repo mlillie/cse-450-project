@@ -66,8 +66,8 @@ class Algorithm:
                 doctor_pref_patient_illness = list(map(int, doctor_pref[doctor_id][2]))
                 doctor_pref_patient_illness_length = len(doctor_pref_patient_illness)
 
-                patient_age = patient_values[patient_id][1]
-                patient_illness = patient_values[patient_id][2]
+                patient_age = patient_values[patient_id][0]
+                patient_illness = patient_values[patient_id][1]
 
                 patient_pref_index = doctor_pref_patient_ids.index(patient_id) + 1
                 patient_pref_illness_index = doctor_pref_patient_illness.index(patient_illness) + 1
@@ -89,15 +89,15 @@ class Algorithm:
             for patient_id in patient_pref.keys():
                 patient_pref_doc_ids = list(map(int, patient_pref[patient_id][0]))
                 # TEMPORARY FIX
-                patient_pref_doc_ids[:] = [x - 1 for x in patient_pref_doc_ids]
+                # patient_pref_doc_ids[:] = [x - 1 for x in patient_pref_doc_ids]
                 patient_pref_doc_ids_length = len(patient_pref_doc_ids)
                 patient_pref_gender = list(map(int, patient_pref[patient_id][1]))
                 patient_pref_gender_length = len(patient_pref_gender)
                 patient_pref_doctor_age = patient_pref[patient_id][2]
                 patient_pref_doctor_age_length = len(patient_pref_doctor_age)
 
-                doctor_age = doctor_values[doctor_id][1]
-                doctor_gender = doctor_values[doctor_id][2]
+                doctor_age = doctor_values[doctor_id][0]
+                doctor_gender = doctor_values[doctor_id][1]
 
                 doctor_pref_index = patient_pref_doc_ids.index(doctor_id) + 1
                 doctor_pref_gender_index = patient_pref_gender.index(doctor_gender) + 1

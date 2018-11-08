@@ -1,14 +1,13 @@
 import xlrd
 import os
 
-# CREATED BY: JACKY FONSECA
-# LAST MODIFICATION: 11/07/2018
+# CREATED BY: JACKY 'I'm GAY' FONSECA
+# LAST MODIFICATION: 11/08/2018
 
 
 class Data:
-
     def read(self):
-        path = os.getcwd() + "\\test_cases\Sample1.xlsx"
+        path = os.getcwd() + "\\test_cases\Sample2.xlsx"
 
         wb = xlrd.open_workbook(path)
         sheet = wb.sheet_by_index(0)
@@ -24,7 +23,7 @@ class Data:
             if j > 0:
 
                 # Patient's assigned values
-                patient_values[j-1] = sheet.row_values(j, 0, 3)
+                patient_values[j-1] = sheet.row_values(j, 0, 2)
 
                 # Patient's preference lists
                 """
@@ -32,9 +31,9 @@ class Data:
                 pt2 = Preferred gender list
                 pt3 = Preferred age range list (in tuples)
                 """
-                pt1 = str((sheet.row_values(j, 3, 4))[0]).split(",")
-                pt2 = str((sheet.row_values(j, 4, 5))[0]).split(",")
-                pt3 = (str((sheet.row_values(j, 5, 6))[0]).replace("(", ""))
+                pt1 = str((sheet.row_values(j, 2, 4))[0]).split(",")
+                pt2 = str((sheet.row_values(j, 3, 4))[0]).split(",")
+                pt3 = (str((sheet.row_values(j, 4, 5))[0]).replace("(", ""))
 
                 # creates age ranges and adds them as tuples to a list
                 age_range = []
@@ -47,7 +46,7 @@ class Data:
                 patient_pref[j-1] = (pt1, pt2, age_range)
 
                 # Doctor's assigned values
-                doctor_values[j - 1] = sheet.row_values(j, 6, 9)
+                doctor_values[j-1] = sheet.row_values(j, 5, 7)
 
                 # Doctor's preference
                 """
@@ -55,24 +54,24 @@ class Data:
                     pt2 = Preferred age range list (in tuples)
                     pt3 = Preferred illness type list 
                 """
-                dt1 = str((sheet.row_values(j, 9, 10))[0]).split(",")
+                dt1 = str((sheet.row_values(j, 7, 8))[0]).split(",")
 
                 # creates age ranges and adds them as tuples to a list
                 age_range = []
-                dt2 = str((sheet.row_values(j, 10, 11))[0]).replace("(", "")
+                dt2 = str((sheet.row_values(j, 8, 9))[0]).replace("(", "")
                 while dt2.find(")") != -1:
                     pair = tuple((dt2[:dt2.find(")")]).split(","))
                     age_range.append(pair)
                     dt2 = (dt2.replace(",".join(pair) + ")", ""))[1:]
 
-                dt3 = str((sheet.row_values(j, 11, 12))[0]).split(",")
+                dt3 = str((sheet.row_values(j, 9, 10))[0]).split(",")
 
                 # adds preferences to dictionary
                 doctor_pref[j - 1] = (dt1, age_range, dt3)
 
-        # print (patient_values)
-        # print(patient_pref)
+        # print(patient_values)
         # print(doctor_values)
+        # print(patient_pref)
         # print(doctor_pref)
 
         return patient_values, patient_pref, doctor_values, doctor_pref
