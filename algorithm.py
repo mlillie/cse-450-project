@@ -79,11 +79,10 @@ class Algorithm:
                         break
 
                 percentage = ((patient_pref_age_index / doctor_pref_patient_age_length) * DOCTOR_AGE_WEIGHT) + \
-                             ((
-                                          patient_pref_illness_index / doctor_pref_patient_illness_length) * DOCTOR_ILLNESS_WEIGHT) + \
+                             ((patient_pref_illness_index / doctor_pref_patient_illness_length) * DOCTOR_ILLNESS_WEIGHT) + \
                              ((patient_pref_index / doctor_pref_patient_ids_length) * DOCTOR_PREFERRED_PATIENT_WEIGHT)
 
-                doctor_pref_percentages[doctor_id] = list(doctor_pref_percentages[doctor_id]) + [percentage]
+                doctor_pref_percentages[doctor_id] = doctor_pref_percentages[doctor_id] + [percentage]
 
         for doctor_id in doctor_pref.keys():
             for patient_id in patient_pref.keys():
