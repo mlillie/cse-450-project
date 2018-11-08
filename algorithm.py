@@ -54,8 +54,8 @@ class Algorithm:
 
     def calculate_percentages(self):
         patient_values, patient_pref, doctor_values, doctor_pref = Data().read()
-        doctor_pref_percentages = {}
-        patient_pref_percentages = {}
+        doctor_pref_percentages = dict((key, []) for key in doctor_pref.keys())
+        patient_pref_percentages = dict((key, []) for key in patient_pref.keys())
 
         for patient_id in patient_pref.keys():
             for doctor_id in doctor_pref.keys():
@@ -83,7 +83,7 @@ class Algorithm:
                                           patient_pref_illness_index / doctor_pref_patient_illness_length) * DOCTOR_ILLNESS_WEIGHT) + \
                              ((patient_pref_index / doctor_pref_patient_ids_length) * DOCTOR_PREFERRED_PATIENT_WEIGHT)
 
-                doctor_pref_percentages[doctor_id] = percentage
+                doctor_pref_percentages[doctor_id] = list(doctor_pref_percentages[doctor_id]) + [percentage]
 
         for doctor_id in doctor_pref.keys():
             for patient_id in patient_pref.keys():
@@ -112,7 +112,7 @@ class Algorithm:
                              ((doctor_pref_gender_index / patient_pref_gender_length) * PATIENT_GENDER_WEIGHT) + \
                              ((doctor_pref_age_index / patient_pref_doctor_age_length) * PATIENT_AGE_WEIGHT)
 
-                patient_pref_percentages[patient_id] = percentage
+                patient_pref_percentages[patient_id] = patient_pref_percentages[patient_id] + [percentage]
 
         print(doctor_pref_percentages)
         print(patient_pref_percentages)
