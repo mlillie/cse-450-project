@@ -144,11 +144,12 @@ class Algorithm:
         #       ((patient_pref_doctor_age_length - doctor_pref_age_index) / patient_pref_doctor_age_length) *
         #       PATIENT_AGE_WEIGHT)
 
-        patient_to_doctor_percentage = ((
-                                                doctor_pref_index / patient_pref_doc_ids_length) * PATIENT_PREFERRED_DOCTOR_WEIGHT) + \
-                                       ((
-                                                doctor_pref_gender_index / patient_pref_gender_length) * PATIENT_GENDER_WEIGHT) + \
-                                       ((doctor_pref_age_index / patient_pref_doctor_age_length) * PATIENT_AGE_WEIGHT)
+        patient_to_doctor_percentage = (((patient_pref_doc_ids_length - doctor_pref_index) /
+                                         patient_pref_doc_ids_length) * PATIENT_PREFERRED_DOCTOR_WEIGHT) + \
+                                       (((patient_pref_gender_length - doctor_pref_gender_index) /
+                                         patient_pref_gender_length) * PATIENT_GENDER_WEIGHT) + \
+                                       (((patient_pref_doctor_age_length - doctor_pref_age_index) /
+                                         patient_pref_doctor_age_length) * PATIENT_AGE_WEIGHT)
 
         return patient_to_doctor_percentage
 
@@ -172,10 +173,11 @@ class Algorithm:
                 patient_pref_age_index = index + 1
                 break
 
-        doctor_to_patient_percentage = ((patient_pref_age_index / doctor_pref_patient_age_length) * DOCTOR_AGE_WEIGHT) + \
-                                       ((
-                                                patient_pref_illness_index / doctor_pref_patient_illness_length) * DOCTOR_ILLNESS_WEIGHT) + \
-                                       ((
-                                                patient_pref_index / doctor_pref_patient_ids_length) * DOCTOR_PREFERRED_PATIENT_WEIGHT)
+        doctor_to_patient_percentage = (((doctor_pref_patient_age_length - patient_pref_age_index) /
+                                         doctor_pref_patient_age_length) * DOCTOR_AGE_WEIGHT) + \
+                                       (((doctor_pref_patient_illness_length - patient_pref_illness_index) /
+                                         doctor_pref_patient_illness_length) * DOCTOR_ILLNESS_WEIGHT) + \
+                                       (((doctor_pref_patient_ids_length - patient_pref_index) /
+                                         doctor_pref_patient_ids_length) * DOCTOR_PREFERRED_PATIENT_WEIGHT)
 
         return doctor_to_patient_percentage
