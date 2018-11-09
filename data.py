@@ -1,13 +1,24 @@
+# data.py
+# -----------------------------------------------------------------------------------------------
+# This class file will be used to process the excel files that are built outside of this program.
+# These excel files will be used to create the preference lists.
+# The program should be able to handle any number of preference lists,
+# this assumes that the preference lists are correct in that they have the same
+# number of doctors as patients and the values are valid for the algorithm.
+
+# Created By: Jacky Fonseca
+# Last Edit: 11/08/2018
+
+# TODO: Need to edit the read function to take any arbitrary excel file with any number of preferences.
+
 import xlrd
 import os
 
-# CREATED BY: JACKY FONSECA
-# LAST MODIFICATION: 11/08/2018
-
 
 class Data:
-    def read(self):
-        path = os.getcwd() + "\\test_cases\Sample2.xlsx"
+    def read(self, file):
+        # path = os.getcwd() + "\\test_cases\Sample2.xlsx"
+        path = os.getcwd() + file
 
         wb = xlrd.open_workbook(path)
         sheet = wb.sheet_by_index(0)
@@ -69,9 +80,9 @@ class Data:
                 # adds preferences to dictionary
                 doctor_pref[j - 1] = (dt1, age_range, dt3)
 
-        # print(patient_values)
-        # print(doctor_values)
-        # print(patient_pref)
-        # print(doctor_pref)
+        print(patient_values)
+        print(doctor_values)
+        print(patient_pref)
+        print(doctor_pref)
 
         return patient_values, patient_pref, doctor_values, doctor_pref
