@@ -1,42 +1,14 @@
-# # Loop until every hospital has been matched
-# while len(matching) != len(hospital_ids):
-#     # Go through each hospital
-#     for hospital in hospital_ids:
-#         # Check to see if it has not matched
-#         if hospitals_dict.get(hospital) is None:
-#             # Go through the student prefs for this hospital
-#             for student in hospital_prefs[hospital]:
-#                 # Check to see if the student is not matched
-#                 if students_dict.get(student) is None:
-#                     hospitals_dict[hospital] = student
-#                     students_dict[student] = hospital
-#                     matching[hospital] = student
-#                     proposals_count += 1
-#                     break  # The hospital has matched so we can break
-#                 else:
-#                     # If it is, check the index of the student prefs to determine if we should
-#                     # replace the current match
-#                     hospital_matching = students_dict.get(student)
-#                     # Check to see if the student prefers this hospital to it's current one
-#                     if student_prefs[student].index(hospital) < student_prefs[student].index(hospital_matching):
-#                         # if so, then switch them by deleting the current match from matching and swapping
-#                         del matching[hospital_matching]
-#                         hospitals_dict[hospital_matching] = None
-#                         hospitals_dict[hospital] = student
-#                         students_dict[student] = hospital
-#                         matching[hospital] = student
-#                         proposals_count += 1
-#                         break  # The hospital has matched so we can break
+# algorithm.py
+# -----------------------------------------------------------------------------------------------
+# This class file will implement the actual algorithm from the project proposal document.
+# As such, this is an advanced stable matching algorithm which uses doctor and patient
+# preference lists but instead of just having the preferred doctor/patient, the list
+# will contain other attributes that weigh the matching stable pairs to be found.
 
-# preferred patients
-# age range of patient
-# illness type
-#
-#
-# preferred doc
-# age range of doc
-# gender of doc
-from Data import Data
+# Created by Matthew Lillie
+# Last edit: 11/08/18
+
+from data import Data
 
 PATIENT_AGE_WEIGHT = 0.20
 PATIENT_GENDER_WEIGHT = 0.20
@@ -46,14 +18,13 @@ DOCTOR_ILLNESS_WEIGHT = 0.60
 DOCTOR_AGE_WEIGHT = 0.10
 DOCTOR_PREFERRED_PATIENT_WEIGHT = 0.30
 
-# Created by Matthew Lillie
-# Last edit: 11/08/18
-
 
 class Algorithm:
 
-    def matching_algorithm(self):
-        patient_values, patient_pref, doctor_values, doctor_pref = Data().read()
+    def matching_algorithm(self, pref_lists):
+        # patient_values, patient_pref, doctor_values, doctor_pref = Data().read()
+        patient_values, patient_pref, doctor_values, doctor_pref = pref_lists
+
         doctor_ids = doctor_pref.keys()
         patient_ids = patient_pref.keys()
         matching = dict()
@@ -153,3 +124,42 @@ class Algorithm:
                      ((doctor_pref_age_index / patient_pref_doctor_age_length) * PATIENT_AGE_WEIGHT)
 
         return patient_to_doctor_percentage
+
+# # Loop until every hospital has been matched
+# while len(matching) != len(hospital_ids):
+#     # Go through each hospital
+#     for hospital in hospital_ids:
+#         # Check to see if it has not matched
+#         if hospitals_dict.get(hospital) is None:
+#             # Go through the student prefs for this hospital
+#             for student in hospital_prefs[hospital]:
+#                 # Check to see if the student is not matched
+#                 if students_dict.get(student) is None:
+#                     hospitals_dict[hospital] = student
+#                     students_dict[student] = hospital
+#                     matching[hospital] = student
+#                     proposals_count += 1
+#                     break  # The hospital has matched so we can break
+#                 else:
+#                     # If it is, check the index of the student prefs to determine if we should
+#                     # replace the current match
+#                     hospital_matching = students_dict.get(student)
+#                     # Check to see if the student prefers this hospital to it's current one
+#                     if student_prefs[student].index(hospital) < student_prefs[student].index(hospital_matching):
+#                         # if so, then switch them by deleting the current match from matching and swapping
+#                         del matching[hospital_matching]
+#                         hospitals_dict[hospital_matching] = None
+#                         hospitals_dict[hospital] = student
+#                         students_dict[student] = hospital
+#                         matching[hospital] = student
+#                         proposals_count += 1
+#                         break  # The hospital has matched so we can break
+
+# preferred patients
+# age range of patient
+# illness type
+#
+#
+# preferred doc
+# age range of doc
+# gender of doc
