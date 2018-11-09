@@ -164,13 +164,13 @@ class Algorithm:
         patient_age = patient_values[patient_id][0]
         patient_illness = patient_values[patient_id][1]
 
-        patient_pref_index = doctor_pref_patient_ids.index(patient_id) + 1
-        patient_pref_illness_index = doctor_pref_patient_illness.index(patient_illness) + 1
+        patient_pref_index = doctor_pref_patient_ids.index(patient_id)
+        patient_pref_illness_index = doctor_pref_patient_illness.index(patient_illness)
         patient_pref_age_index = -1
 
         for index, (lower, higher) in enumerate(doctor_pref_patient_age):
             if int(lower) <= patient_age <= int(higher):
-                patient_pref_age_index = index + 1
+                patient_pref_age_index = index
                 break
 
         doctor_to_patient_percentage = (((doctor_pref_patient_age_length - patient_pref_age_index) /
