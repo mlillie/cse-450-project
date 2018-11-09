@@ -9,7 +9,7 @@
 # Created by Matthew Lillie
 # Last edit: 11/09/18
 
-from Data import Data
+from data import Data
 
 PATIENT_AGE_WEIGHT = 0.20
 PATIENT_GENDER_WEIGHT = 0.20
@@ -23,7 +23,10 @@ DOCTOR_PREFERRED_PATIENT_WEIGHT = 0.30
 class Algorithm:
 
     def doctor_matching_algorithm(self):
-        patient_values, patient_pref, doctor_values, doctor_pref = Data().read()
+        return self.doctor_matching_algorithm(Data().read("\\test_cases\Sample2.xlsx"))
+
+    def doctor_matching_algorithm(self, pref_lists):
+        patient_values, patient_pref, doctor_values, doctor_pref = pref_lists
         doctor_ids = doctor_pref.keys()
         patient_ids = patient_pref.keys()
         matching = dict()
@@ -66,7 +69,10 @@ class Algorithm:
         print("Doctor matches: ", matching)
 
     def patient_matching_algorithm(self):
-        patient_values, patient_pref, doctor_values, doctor_pref = Data().read()
+        return self.patient_matching_algorithm(Data().read("\\test_cases\Sample2.xlsx"))
+
+    def patient_matching_algorithm(self, pref_lists):
+        patient_values, patient_pref, doctor_values, doctor_pref = pref_lists
         doctor_ids = doctor_pref.keys()
         patient_ids = patient_pref.keys()
         matching = dict()

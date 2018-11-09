@@ -80,9 +80,9 @@ class Data:
                 # adds preferences to dictionary
                 doctor_pref[j - 1] = (dt1, age_range, dt3)
 
-        print(patient_values)
-        print(doctor_values)
-        print(patient_pref)
-        print(doctor_pref)
+        # print(patient_values)
+        # print(doctor_values)
+        # print(patient_pref)
+        # print(doctor_pref)
 
         return patient_values, patient_pref, doctor_values, doctor_pref
