@@ -11,6 +11,7 @@ d_ages = [(81, 90), (71, 80), (61, 70), (51, 60), (41, 50), (31, 40), (21, 30)]
 d_genders = [3, 2, 1, 0]
 p_types = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 
+
 class GUI:
 
     def delete_p_age(self, l):
@@ -19,13 +20,13 @@ class GUI:
         # Delete from Listbox
         selection = l.curselection()
         if selection:
+            value = l.get(selection[0])
             l.delete(selection[0])
             # Delete from list that provided it
-            value = eval(l.get(selection[0]))
             ind = p_ages.index(value)
             del (p_ages[ind])
-            p_ages_ordered += ind.ToString()
-
+            p_ages_ordered += str(ind)
+            l.update()
 
     def application(self):
         global p_ages
@@ -72,7 +73,7 @@ class GUI:
         for e in p_ages:
             p_age_list.insert(0, e)
 
-        p_ages_button = Button(window, text="Add age", command=self.delete_p_age(p_age_list))
+        p_ages_button = Button(window, text="Add age", command=lambda: self.delete_p_age(p_age_list))
 
         d_p_prompt.grid(column=0, row=10, columnspan=1, rowspan=1, pady=15, sticky=W)
         d_age_p_lbl.grid(column=0, row=11, columnspan=1, sticky=W)
