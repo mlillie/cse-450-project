@@ -25,7 +25,7 @@ class Algorithm:
     def doctor_matching_algorithm(self):
         return self.doctor_matching_algorithm(Data().read("\\test_cases\Sample2.xlsx"))
 
-    def doctor_matching_algorithm(self, pref_lists):
+    def doctor_matching_algorithm(self, pref_lists, patient_weights):
         patient_values, patient_pref, doctor_values, doctor_pref = pref_lists
         doctor_ids = doctor_pref.keys()
         patient_ids = patient_pref.keys()
@@ -54,9 +54,15 @@ class Algorithm:
 
                             percentage_to_current = self.calculate_percentages_patient(patient_pref,
                                                                                        doctor_values, doctor,
-                                                                                       doctor_matching)
+                                                                                       doctor_matching,
+                                                                                       patient_weights[0],
+                                                                                       patient_weights[1],
+                                                                                       patient_weights[2])
                             percentage_to_possible = self.calculate_percentages_patient(patient_pref,
-                                                                                        doctor_values, doctor, patient)
+                                                                                        doctor_values, doctor, patient,
+                                                                                        patient_weights[0],
+                                                                                        patient_weights[1],
+                                                                                        patient_weights[2])
                             # Check to see if the patient prefers this doctor to it's current one
                             if percentage_to_current < percentage_to_possible:
                                 # if so, then switch them by deleting the current match from matching and swapping
@@ -67,11 +73,12 @@ class Algorithm:
                                 matching[doctor] = patient
                                 break  # The doctor has matched so we can break
         print("Doctor matches: ", matching)
+        return matching
 
     def patient_matching_algorithm(self):
         return self.patient_matching_algorithm(Data().read("\\test_cases\Sample2.xlsx"))
 
-    def patient_matching_algorithm(self, pref_lists):
+    def patient_matching_algorithm(self, pref_lists, doctor_weights):
         patient_values, patient_pref, doctor_values, doctor_pref = pref_lists
         doctor_ids = doctor_pref.keys()
         patient_ids = patient_pref.keys()
@@ -100,9 +107,15 @@ class Algorithm:
 
                             percentage_to_current = self.calculate_percentages_doctor(patient_values, doctor_pref,
                                                                                       patient_matching,
-                                                                                      patient)
+                                                                                      patient,
+                                                                                      doctor_weights[0],
+                                                                                      doctor_weights[1],
+                                                                                      doctor_weights[2])
                             percentage_to_possible = self.calculate_percentages_doctor(patient_values, doctor_pref,
-                                                                                       doctor, patient)
+                                                                                       doctor, patient,
+                                                                                       doctor_weights[0],
+                                                                                       doctor_weights[1],
+                                                                                       doctor_weights[2])
                             # Check to see if the doctor prefers this patient to it's current one
                             if percentage_to_current < percentage_to_possible:
                                 # if so, then switch them by deleting the current match from matching and swapping
@@ -113,8 +126,12 @@ class Algorithm:
                                 matching[patient] = doctor
                                 break  # The doctor has matched so we can break
         print("Patient matches: ", matching)
+        return matching
 
-    def calculate_percentages_patient(self, patient_pref, doctor_values, doctor_id, patient_id):
+    def calculate_percentages_patient(self, patient_pref, doctor_values, doctor_id, patient_id,
+                                      pref_weight=PATIENT_PREFERRED_DOCTOR_WEIGHT,
+                                      gender_weight=PATIENT_GENDER_WEIGHT,
+                                      age_weight=PATIENT_AGE_WEIGHT):
         patient_pref_doc_ids = list(map(int, patient_pref[patient_id][0]))
         patient_pref_doc_ids_length = len(patient_pref_doc_ids)
         patient_pref_gender = list(map(int, patient_pref[patient_id][1]))
@@ -145,15 +162,18 @@ class Algorithm:
         #       PATIENT_AGE_WEIGHT)
 
         patient_to_doctor_percentage = (((patient_pref_doc_ids_length - doctor_pref_index) /
-                                         patient_pref_doc_ids_length) * PATIENT_PREFERRED_DOCTOR_WEIGHT) + \
+                                         patient_pref_doc_ids_length) * pref_weight) + \
                                        (((patient_pref_gender_length - doctor_pref_gender_index) /
-                                         patient_pref_gender_length) * PATIENT_GENDER_WEIGHT) + \
+                                         patient_pref_gender_length) * gender_weight) + \
                                        (((patient_pref_doctor_age_length - doctor_pref_age_index) /
-                                         patient_pref_doctor_age_length) * PATIENT_AGE_WEIGHT)
+                                         patient_pref_doctor_age_length) * age_weight)
 
         return patient_to_doctor_percentage
 
-    def calculate_percentages_doctor(self, patient_values, doctor_pref, doctor_id, patient_id):
+    def calculate_percentages_doctor(self, patient_values, doctor_pref, doctor_id, patient_id,
+                                     age_weight=DOCTOR_AGE_WEIGHT,
+                                     illness_weight=DOCTOR_ILLNESS_WEIGHT,
+                                     pref_weight=DOCTOR_PREFERRED_PATIENT_WEIGHT):
         doctor_pref_patient_ids = list(map(int, doctor_pref[doctor_id][0]))
         doctor_pref_patient_ids_length = len(doctor_pref_patient_ids)
         doctor_pref_patient_age = doctor_pref[doctor_id][1]
@@ -174,10 +194,10 @@ class Algorithm:
                 break
 
         doctor_to_patient_percentage = (((doctor_pref_patient_age_length - patient_pref_age_index) /
-                                         doctor_pref_patient_age_length) * DOCTOR_AGE_WEIGHT) + \
+                                         doctor_pref_patient_age_length) * age_weight) + \
                                        (((doctor_pref_patient_illness_length - patient_pref_illness_index) /
-                                         doctor_pref_patient_illness_length) * DOCTOR_ILLNESS_WEIGHT) + \
+                                         doctor_pref_patient_illness_length) * illness_weight) + \
                                        (((doctor_pref_patient_ids_length - patient_pref_index) /
-                                         doctor_pref_patient_ids_length) * DOCTOR_PREFERRED_PATIENT_WEIGHT)
+                                         doctor_pref_patient_ids_length) * pref_weight)
 
         return doctor_to_patient_percentage
