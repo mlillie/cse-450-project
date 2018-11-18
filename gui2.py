@@ -155,11 +155,15 @@ def test():
 
     # Handling the matching buttons
     def match_doctor_button():
-        age_weight = patient_age_weight_dv.get()
-        gender_weight = patient_gender_weight_dv.get()
-        pref_weight = patient_pref_weight_dv.get()
+        age_weight = patient_age_weight_dv.get() / 100.0
+        gender_weight = patient_gender_weight_dv.get() / 100.0
+        pref_weight = patient_pref_weight_dv.get() / 100.0
 
-        if age_weight + gender_weight + pref_weight != 100:
+        print(age_weight)
+        print(gender_weight)
+        print(pref_weight)
+
+        if age_weight + gender_weight + pref_weight != 1:
             messagebox.showerror("Error", "Invalid Preference Weights")
         else:
             results_tree.delete(*results_tree.get_children())
@@ -171,11 +175,11 @@ def test():
                 results_tree.insert('', 'end', text="Doctor_" + str(key), values=("Patient_" + str(value)))
 
     def match_patient_button():
-        age_weight = doctor_age_weight_dv.get()
-        illness_weight = doctor_illness_weight_dv.get()
-        pref_weight = doctor_pref_weight_dv.get()
+        age_weight = doctor_age_weight_dv.get() / 100.0
+        illness_weight = doctor_illness_weight_dv.get() / 100.0
+        pref_weight = doctor_pref_weight_dv.get() / 100.0
 
-        if age_weight + illness_weight + pref_weight != 100:
+        if age_weight + illness_weight + pref_weight != 1:
             messagebox.showerror("Error", "Invalid Preference Weights")
         else:
             results_tree.delete(*results_tree.get_children())

@@ -71,6 +71,7 @@ class Algorithm:
                                 doctors_dict[doctor] = patient
                                 patients_dict[patient] = doctor
                                 matching[doctor] = patient
+                                print("SWAP")
                                 break  # The doctor has matched so we can break
         print("Doctor matches: ", matching)
         return matching
@@ -168,6 +169,8 @@ class Algorithm:
                                        (((patient_pref_doctor_age_length - doctor_pref_age_index) /
                                          patient_pref_doctor_age_length) * age_weight)
 
+        print("Doctor id " + str(doctor_id) + " patient id " + str(patient_id) + " percent: " + str(
+            patient_to_doctor_percentage))
         return patient_to_doctor_percentage
 
     def calculate_percentages_doctor(self, patient_values, doctor_pref, doctor_id, patient_id,
@@ -200,4 +203,6 @@ class Algorithm:
                                        (((doctor_pref_patient_ids_length - patient_pref_index) /
                                          doctor_pref_patient_ids_length) * pref_weight)
 
+        print("Doctor id " + str(doctor_id) + " patient id " + str(patient_id) + " percent: " + str(
+            doctor_to_patient_percentage))
         return doctor_to_patient_percentage
