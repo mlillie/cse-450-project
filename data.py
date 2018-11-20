@@ -10,12 +10,21 @@
 # Last Edit: 11/08/2018
 
 # TODO: Need to edit the read function to take any arbitrary excel file with any number of preferences.
+import operator
 
 import xlrd
 import os
 
+PATIENT_AGE_WEIGHT = 0.20
+PATIENT_GENDER_WEIGHT = 0.20
+PATIENT_PREFERRED_DOCTOR_WEIGHT = 0.60
+
+DOCTOR_ILLNESS_WEIGHT = 0.60
+DOCTOR_AGE_WEIGHT = 0.10
+DOCTOR_PREFERRED_PATIENT_WEIGHT = 0.30
 
 class Data:
+
     def read(self, file):
         # path = os.getcwd() + "\\test_cases\Sample2.xlsx"
         path = os.getcwd() + file
@@ -86,3 +95,80 @@ class Data:
         # print(doctor_pref)
 
         return patient_values, patient_pref, doctor_values, doctor_pref
+
+    def calc_percentages(self, data, weights=(PATIENT_AGE_WEIGHT, PATIENT_GENDER_WEIGHT,
+                                              PATIENT_PREFERRED_DOCTOR_WEIGHT, DOCTOR_ILLNESS_WEIGHT, DOCTOR_AGE_WEIGHT,
+                                              DOCTOR_PREFERRED_PATIENT_WEIGHT)):
+
+        patient_values, patient_pref, doctor_values, doctor_pref = data
+        doctor_ids = doctor_pref.keys()
+        patient_ids = patient_pref.keys()
+        patient_percentages = {p: dict.fromkeys(doctor_ids, 0.0) for p in patient_ids}
+
+        doctor_percentages = {d: dict.fromkeys(patient_ids, 0.0) for d in doctor_ids}
+
+        for p_id in patient_ids:
+            for d_id in doctor_ids:
+                # First calculation of  patient percentage to doctor
+                patient_pref_doc_ids = list(map(int, patient_pref[p_id][0]))
+                patient_pref_doc_ids_length = len(patient_pref_doc_ids)
+                patient_pref_gender = list(map(int, patient_pref[p_id][1]))
+                patient_pref_gender_length = len(patient_pref_gender)
+                patient_pref_doctor_age = patient_pref[p_id][2]
+                patient_pref_doctor_age_length = len(patient_pref_doctor_age)
+
+                doctor_age = doctor_values[d_id][0]
+                doctor_gender = doctor_values[d_id][1]
+
+                doctor_pref_index = patient_pref_doc_ids.index(d_id)
+                doctor_pref_gender_index = patient_pref_gender.index(doctor_gender)
+                doctor_pref_age_index = -1
+
+                for index, (lower, higher) in enumerate(patient_pref_doctor_age):
+                    if int(lower) <= doctor_age <= int(higher):
+                        doctor_pref_age_index = index
+                        break
+
+                patient_percentages[p_id][d_id] = (((patient_pref_doc_ids_length - doctor_pref_index) /
+                                                    patient_pref_doc_ids_length) * weights[2]) + \
+                                                  (((patient_pref_gender_length - doctor_pref_gender_index) /
+                                                    patient_pref_gender_length) * weights[1]) + \
+                                                  (((patient_pref_doctor_age_length - doctor_pref_age_index) /
+                                                    patient_pref_doctor_age_length) * weights[0])
+
+                # Second calculation of doctor percentage to patient
+                doctor_pref_patient_ids = list(map(int, doctor_pref[d_id][0]))
+                doctor_pref_patient_ids_length = len(doctor_pref_patient_ids)
+                doctor_pref_patient_age = doctor_pref[d_id][1]
+                doctor_pref_patient_age_length = len(doctor_pref_patient_age)
+                doctor_pref_patient_illness = list(map(int, doctor_pref[d_id][2]))
+                doctor_pref_patient_illness_length = len(doctor_pref_patient_illness)
+
+                patient_age = patient_values[p_id][0]
+                patient_illness = patient_values[p_id][1]
+
+                patient_pref_index = doctor_pref_patient_ids.index(p_id)
+                patient_pref_illness_index = doctor_pref_patient_illness.index(patient_illness)
+                patient_pref_age_index = -1
+
+                for index, (lower, higher) in enumerate(doctor_pref_patient_age):
+                    if int(lower) <= patient_age <= int(higher):
+                        patient_pref_age_index = index
+                        break
+
+                doctor_percentages[d_id][p_id] = (((doctor_pref_patient_age_length - patient_pref_age_index) /
+                                                   doctor_pref_patient_age_length) * weights[4]) + \
+                                                 (((doctor_pref_patient_illness_length - patient_pref_illness_index) /
+                                                   doctor_pref_patient_illness_length) * weights[3]) + \
+                                                 (((doctor_pref_patient_ids_length - patient_pref_index) /
+                                                   doctor_pref_patient_ids_length) * weights[5])
+
+        # Sort the nested dictionary by the value (percentage)
+        patient_percentages = {key: dict(sorted(values.items(), key=operator.itemgetter(1), reverse=True)) for
+                               key, values in
+                               patient_percentages.items()}
+        doctor_percentages = {key: dict(sorted(values.items(), key=operator.itemgetter(1), reverse=True)) for
+                              key, values in
+                              doctor_percentages.items()}
+
+        return patient_percentages, doctor_percentages

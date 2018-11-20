@@ -155,37 +155,45 @@ def test():
 
     # Handling the matching buttons
     def match_doctor_button():
-        age_weight = patient_age_weight_dv.get() / 100.0
-        gender_weight = patient_gender_weight_dv.get() / 100.0
-        pref_weight = patient_pref_weight_dv.get() / 100.0
+        d_age_weight = doctor_age_weight_dv.get() / 100.0
+        d_illness_weight = doctor_illness_weight_dv.get() / 100.0
+        d_pref_weight = doctor_pref_weight_dv.get() / 100.0
 
-        print(age_weight)
-        print(gender_weight)
-        print(pref_weight)
+        p_age_weight = patient_age_weight_dv.get() / 100.0
+        p_gender_weight = patient_gender_weight_dv.get() / 100.0
+        p_pref_weight = patient_pref_weight_dv.get() / 100.0
 
-        if age_weight + gender_weight + pref_weight != 1:
+        if d_age_weight + d_illness_weight + d_pref_weight != 1 or p_age_weight + p_gender_weight + p_pref_weight != 1:
             messagebox.showerror("Error", "Invalid Preference Weights")
         else:
             results_tree.delete(*results_tree.get_children())
             algorithm = Algorithm()
+            percentages = Data().calc_percentages((patient_values, patient_pref, doctor_values, doctor_pref), (
+                p_age_weight, p_gender_weight, p_pref_weight, d_illness_weight, d_age_weight, d_pref_weight))
             results = algorithm.doctor_matching_algorithm((patient_values, patient_pref, doctor_values, doctor_pref),
-                                                          (pref_weight, gender_weight, age_weight))
+                                                          percentages)
 
             for key, value in results.items():
                 results_tree.insert('', 'end', text="Doctor_" + str(key), values=("Patient_" + str(value)))
 
     def match_patient_button():
-        age_weight = doctor_age_weight_dv.get() / 100.0
-        illness_weight = doctor_illness_weight_dv.get() / 100.0
-        pref_weight = doctor_pref_weight_dv.get() / 100.0
+        d_age_weight = doctor_age_weight_dv.get() / 100.0
+        d_illness_weight = doctor_illness_weight_dv.get() / 100.0
+        d_pref_weight = doctor_pref_weight_dv.get() / 100.0
 
-        if age_weight + illness_weight + pref_weight != 1:
+        p_age_weight = patient_age_weight_dv.get() / 100.0
+        p_gender_weight = patient_gender_weight_dv.get() / 100.0
+        p_pref_weight = patient_pref_weight_dv.get() / 100.0
+
+        if d_age_weight + d_illness_weight + d_pref_weight != 1 or p_age_weight + p_gender_weight + p_pref_weight != 1:
             messagebox.showerror("Error", "Invalid Preference Weights")
         else:
             results_tree.delete(*results_tree.get_children())
             algorithm = Algorithm()
+            percentages = Data().calc_percentages((patient_values, patient_pref, doctor_values, doctor_pref), (
+                p_age_weight, p_gender_weight, p_pref_weight, d_illness_weight, d_age_weight, d_pref_weight))
             results = algorithm.patient_matching_algorithm((patient_values, patient_pref, doctor_values, doctor_pref),
-                                                           (age_weight, illness_weight, pref_weight))
+                                                           percentages)
 
             for key, value in results.items():
                 results_tree.insert('', 'end', text="Patient_" + str(key), values=("Doctor_" + str(value)))
