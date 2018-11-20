@@ -173,8 +173,12 @@ def test():
             results = algorithm.doctor_matching_algorithm((patient_values, patient_pref, doctor_values, doctor_pref),
                                                           percentages)
 
+            del percentages
+
             for key, value in results.items():
                 results_tree.insert('', 'end', text="Doctor_" + str(key), values=("Patient_" + str(value)))
+
+            del results
 
     def match_patient_button():
         d_age_weight = doctor_age_weight_dv.get() / 100.0
@@ -194,9 +198,12 @@ def test():
                 p_age_weight, p_gender_weight, p_pref_weight, d_illness_weight, d_age_weight, d_pref_weight))
             results = algorithm.patient_matching_algorithm((patient_values, patient_pref, doctor_values, doctor_pref),
                                                            percentages)
+            del percentages
 
             for key, value in results.items():
                 results_tree.insert('', 'end', text="Patient_" + str(key), values=("Doctor_" + str(value)))
+
+            del results
 
     Button(frame, text="Match Doctor -> Patient", command=match_doctor_button).grid(column=0, row=14, sticky=W)
     Button(frame, text="Match Patient -> Doctor", command=match_patient_button).grid(column=29, row=14, sticky=E)

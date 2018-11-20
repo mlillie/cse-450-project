@@ -22,34 +22,34 @@ class Algorithm:
         # Loop until every doctor has been matched
         while len(matching) != len(doctor_ids):
             # Go through each doctor
-            for doctor in doctor_ids:
+            for d_id in doctor_ids:
                 # Check to see if it has not matched
-                if doctors_dict.get(doctor) is None:
+                if doctors_dict.get(d_id) is None:
                     # Go through the patient prefs for this doctor
-                    doctor_pref_patient_ids = doctor_percentages[doctor].keys()
-                    for patient in doctor_pref_patient_ids:
+                    doctor_pref_patient_ids = doctor_percentages[d_id].keys()
+                    for p_id in doctor_pref_patient_ids:
                         # Check to see if the patient is not matched
-                        if patients_dict.get(patient) is None:
-                            doctors_dict[doctor] = patient
-                            patients_dict[patient] = doctor
-                            matching[doctor] = patient
+                        if patients_dict.get(p_id) is None:
+                            doctors_dict[d_id] = p_id
+                            patients_dict[p_id] = d_id
+                            matching[d_id] = p_id
                             break  # The doctor has matched so we can break
                         else:
                             # If it is, check the percentage calculation of the patient prefs to determine if we should
                             # replace the current match
-                            doctor_matching = patients_dict.get(patient)
+                            doctor_matching = patients_dict.get(p_id)
 
-                            percentage_to_current = patient_percentages[patient][doctor_matching]
-                            percentage_to_possible = patient_percentages[patient][doctor]
+                            percentage_to_current = patient_percentages[p_id][doctor_matching]
+                            percentage_to_possible = patient_percentages[p_id][d_id]
 
                             # Check to see if the patient prefers this doctor to it's current one
                             if percentage_to_current < percentage_to_possible:
                                 # if so, then switch them by deleting the current match from matching and swapping
                                 del matching[doctor_matching]
                                 doctors_dict[doctor_matching] = None
-                                doctors_dict[doctor] = patient
-                                patients_dict[patient] = doctor
-                                matching[doctor] = patient
+                                doctors_dict[d_id] = p_id
+                                patients_dict[p_id] = d_id
+                                matching[d_id] = p_id
                                 print("SWAP")
                                 break  # The doctor has matched so we can break
         print("Doctor matches: ", matching)
@@ -66,33 +66,33 @@ class Algorithm:
         # Loop until every patient has been matched
         while len(matching) != len(patient_ids):
             # Go through each patient
-            for patient in patient_ids:
+            for p_id in patient_ids:
                 # Check to see if it has not matched
-                if patients_dict.get(patient) is None:
+                if patients_dict.get(p_id) is None:
                     # Go through the doctor prefs for this patient
-                    patient_pref_doctor_ids = patient_percentages[patient].keys()
-                    for doctor in patient_pref_doctor_ids:
+                    patient_pref_doctor_ids = patient_percentages[p_id].keys()
+                    for d_id in patient_pref_doctor_ids:
                         # Check to see if the doctor is not matched
-                        if doctors_dict.get(doctor) is None:
-                            doctors_dict[doctor] = patient
-                            patients_dict[patient] = doctor
-                            matching[patient] = doctor
+                        if doctors_dict.get(d_id) is None:
+                            doctors_dict[d_id] = p_id
+                            patients_dict[p_id] = d_id
+                            matching[p_id] = d_id
                             break  # The doctor has matched so we can break
                         else:
                             # If it is, check the percentage calculation of the doctor prefs to determine if we should
                             # replace the current match
-                            patient_matching = doctors_dict.get(doctor)
+                            patient_matching = doctors_dict.get(d_id)
 
-                            percentage_to_current = doctor_percentages[doctor][patient_matching]
-                            percentage_to_possible = doctor_percentages[doctor][patient]
+                            percentage_to_current = doctor_percentages[d_id][patient_matching]
+                            percentage_to_possible = doctor_percentages[d_id][p_id]
                             # Check to see if the doctor prefers this patient to it's current one
                             if percentage_to_current < percentage_to_possible:
                                 # if so, then switch them by deleting the current match from matching and swapping
                                 del matching[patient_matching]
                                 patients_dict[patient_matching] = None
-                                patients_dict[patient] = patient
-                                doctors_dict[doctor] = patient
-                                matching[patient] = doctor
+                                patients_dict[p_id] = p_id
+                                doctors_dict[d_id] = p_id
+                                matching[p_id] = d_id
                                 print("SWAP")
                                 break  # The doctor has matched so we can break
         print("Patient matches: ", matching)
