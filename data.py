@@ -163,6 +163,9 @@ class Data:
                                                  (((doctor_pref_patient_ids_length - patient_pref_index) /
                                                    doctor_pref_patient_ids_length) * weights[5])
 
+        # print(patient_percentages)
+        print(doctor_percentages)
+
         # Sort the nested dictionary by the value (percentage)
         patient_percentages = {key: dict(sorted(values.items(), key=operator.itemgetter(1), reverse=True)) for
                                key, values in
@@ -170,5 +173,4 @@ class Data:
         doctor_percentages = {key: dict(sorted(values.items(), key=operator.itemgetter(1), reverse=True)) for
                               key, values in
                               doctor_percentages.items()}
-
         return patient_percentages, doctor_percentages

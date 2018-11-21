@@ -11,7 +11,7 @@ if __name__ == '__main__':
     # save the preference list read from the excel file
     data = Data().read(file)
     Algorithm().doctor_matching_algorithm(data, Data().calc_percentages(data))
-    Algorithm().patient_matching_algorithm(data, Data().calc_percentages(data))
+    # Algorithm().patient_matching_algorithm(data, Data().calc_percentages(data))
     # then the returned preference lists from Data will be given to Algorithms
     # Analysis will need to monitor the algorithm
     # TODO: The Analysis class will be used to log the results from Algorithm

@@ -4,7 +4,6 @@ from tkinter.ttk import *
 from data import Data
 from algorithm import Algorithm
 
-
 def test():
     root = Tk()
     root.resizable(False, False)
@@ -17,7 +16,7 @@ def test():
 
     data = Data()
 
-    patient_values, patient_pref, doctor_values, doctor_pref = data.read("\\test_cases\Sample2.xlsx")
+    patient_values, patient_pref, doctor_values, doctor_pref = data.read("\\test_cases\\100_pref_lists.xlsx")
 
     # Tree view for patient's values and preferences
     Label(frame, text="Patients' Values and Preferences:", font='Helvetica 18 bold').grid(column=0, row=0, sticky=W)
@@ -92,6 +91,7 @@ def test():
     doctor_tree.heading('Preferred Age Range', text='Preferred Age Range')
     doctor_tree.heading('Preferred Illness', text='Preferred Illness')
     doctor_tree.column('Age', minwidth=300, stretch=0, anchor=CENTER)
+    doctor_tree.column('Gender', minwidth=300, stretch=0, anchor=CENTER)
     doctor_tree.column('Gender', minwidth=300, stretch=0, anchor=CENTER)
     doctor_tree.column('Preferred Patient', minwidth=300, stretch=0, anchor=CENTER)
     doctor_tree.column('Preferred Age Range', minwidth=300, stretch=YES, anchor=CENTER)
