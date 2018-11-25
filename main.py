@@ -47,6 +47,9 @@ if __name__ == '__main__':
         time_points.append(total_time.microseconds)
         y_points.append(algorithm.get_swap_count())
 
+        pyplot.plot(total_time.microseconds, algorithm.get_swap_count(), 'o', label = file)
+        pyplot.legend(loc='upper left')
+
         print("Total time: " + str(total_time) + '\n')
         print("Total swap count: " + str(algorithm.get_swap_count()) + '\n')
 
@@ -71,6 +74,6 @@ if __name__ == '__main__':
     pyplot.xlabel('Time to execute (microseconds)')
     pyplot.ylabel('# of swaps')
     #dates = date2num(time_points)
-    pyplot.plot(time_points, y_points)
+    pyplot.plot(time_points, y_points, 'k', alpha=0.2)
     #pyplot.gcf().autofmt_xdate()
     pyplot.show()
