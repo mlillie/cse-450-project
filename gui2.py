@@ -1,3 +1,13 @@
+# gui2.py
+# -----------------------------------------------------------------------------------------------
+# This gui is used to help show the building of the data.
+# It displays the preference lists.
+# Allows the entry of the percentages for each of the attribute constraints
+# Runs the algorithm and can be chosen to be doctor or patient preferred.
+
+# Created by Matthew Lillie
+# Last edit: 11/21/18
+
 from tkinter import *
 from tkinter import messagebox
 from tkinter.ttk import *

@@ -7,7 +7,7 @@
 # number of doctors as patients and the values are valid for the algorithm.
 
 # Created By: Jacky Fonseca
-# Last Edit: 11/08/2018
+# Last Edit: 11/21/2018
 
 # TODO: Need to edit the read function to take any arbitrary excel file with any number of preferences.
 import operator

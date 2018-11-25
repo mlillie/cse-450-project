@@ -8,10 +8,10 @@
 #   3. Derive the overall efficiency of the algorithm from the data generated.
 
 # Created By: Paul Witulski
-# Last Edit: 11/08/2018
+# Last Edit: 11/25/2018
 
 # TODO: Until we get enough data collected to plot and analysis the results of the algorithm.
-# TODO: Will try to get the functionality ready using sample data and update as progess happens.
+# TODO: Will try to get the functionality ready using sample data and update as progress happens.
 
 from matplotlib import pyplot
 import numpy as np
@@ -21,6 +21,19 @@ import random
 
 
 class Analysis:
+
+    def plot_efficiency(self):
+        # used to plot the number of swaps
+        return
+
+    def plot_time_complexity(self):
+        # used to plot the time it takes to complete the algorithm
+        return
+
+    def plot_space_complexity(self):
+        # used to plot amount of memory used to complete the algorithm
+        return
+
     # def __init__(self):
         # print('Analyzing Algorithms...')
 
@@ -30,36 +43,33 @@ class Analysis:
         # plotTC(fshuffle, 10, 1000, 1000, 10)
         # self.plotTC(fsort, 10, 1000, 10, 10)
 
-        # enable this in case you want to set y axis limits
-        # pyplot.ylim((-0.1, 0.5))
-
         # show plot
         # pyplot.show()
 
-    def fconst(N):
+    def fconst(self, N):
         # O(1) function
         x = 1
 
-    def flinear(N):
+    def flinear(self, N):
         # O(n) function
         x = [i for i in range(N)]
 
-    def fsquare(N):
+    def fsquare(self, N):
         # O(n^2) function
         for i in range(N):
             for j in range(N):
                 x = i*j
 
-    def fshuffle(N):
+    def fshuffle(self, N):
         # O(N)
         random.shuffle(list(range(N)))
 
-    def fsort(N):
+    def fsort(self, N):
         x = list(range(N))
         random.shuffle(x)
         x.sort()
 
-    def plotTC(fn, nMin, nMax, nInc, nTests):
+    def plotTC(self, fn, nMin, nMax, nInc, nTests):
         # Run timer and plot time complexity
         x = []
         y = []
@@ -69,5 +79,7 @@ class Analysis:
             t = testNTimer.timeit(number=nTests)
             x.append(i)
             y.append(t)
-        p1 = pyplot.plot(x, y, 'o')
-        # pyplot.legend([p1,], [fn.__name__, ])
+        p1 = pyplot.plot(x, y, 'o', label = fn.__name__)
+        pyplot.legend(loc = 'upper left')
+        #pyplot.legend([p1,], [fn.__name__, ])
+

@@ -7,9 +7,14 @@
 
 
 # Created by Matthew Lillie
-# Last edit: 11/20/18
+# Last edit: 11/21/18
+
+# Minor updates by Paul Witulski
+# Last edit: 11/25/18
 
 class Algorithm:
+    # private variable to keep track of number of swaps
+    swap_count = 0
 
     def doctor_matching_algorithm(self, data, percentages):
         patient_values, patient_pref, doctor_values, doctor_pref = data
@@ -51,6 +56,7 @@ class Algorithm:
                                 patients_dict[p_id] = d_id
                                 matching[d_id] = p_id
                                 print("SWAP")
+                                self.swap_count += 1
                                 break  # The doctor has matched so we can break
         print("Doctor matches: ", matching)
         return matching
@@ -97,3 +103,6 @@ class Algorithm:
                                 break  # The doctor has matched so we can break
         print("Patient matches: ", matching)
         return matching
+
+    def get_swap_count(self):
+        return self.swap_count
