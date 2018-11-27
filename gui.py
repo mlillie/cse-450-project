@@ -1,198 +1,250 @@
-from tkinter import *
-from tkinter.ttk import *
+# gui.py
+# -----------------------------------------------------------------------------------------------
+# This gui is used to help show the building of the data.
+# It displays the preference lists.
+# Allows the entry of the percentages for each of the attribute constraints
+# Runs the algorithm and can be chosen to be doctor or patient preferred.
 
-p_ages_ordered = []
-d_ages_ordered = []
-d_genders_ordered = []
-p_types_ordered = []
-p_ages = [(101, 110), (91, 100), (81, 90), (71, 80), (61, 70), (51, 60), (41, 50), (31, 40), (21, 30), (11, 20),
-          (0, 10)]
-d_ages = [(81, 90), (71, 80), (61, 70), (51, 60), (41, 50), (31, 40), (21, 30)]
-d_genders = [3, 2, 1, 0]
-p_types = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+# Created by Matthew Lillie
+# Last edit: 11/25/18
+
+from tkinter import *
+from tkinter import messagebox
+from tkinter.ttk import *
+from data import Data
+from algorithm import Algorithm
 
 
 class GUI:
 
-    def delete_p_age(self, l):
-        global p_ages
-        global p_ages_ordered
-        # Delete from Listbox
-        selection = l.curselection()
-        if selection:
-            value = l.get(selection[0])
-            l.delete(selection[0])
-            # Delete from list that provided it
-            ind = int(p_ages.index(value))
-            del (p_ages[ind])
-            p_ages_ordered.append(value)
+    def create_gui(self, file="\\test_cases\\100_pref_lists.xlsx"):
+        root = Tk()
+        root.resizable(False, False)
+        root.title("Advanced Stable Matching")
 
-    def delete_p_illness(self, l):
-        global p_types
-        global p_types_ordered
-        # Delete from Listbox
-        selection = l.curselection()
-        if selection:
-            value = l.get(selection[0])
-            l.delete(selection[0])
-            # Delete from list that provided it
-            ind = int(p_types.index(value))
-            del (p_types[ind])
-            p_types_ordered.append(value)
+        canvas = Canvas(root, width=1225, height=525)
+        canvas.pack(side=LEFT)
+        frame = Frame(canvas)
+        canvas.create_window((0, 0), window=frame, anchor='nw')
 
-    def delete_d_age(self, l):
-        global d_ages
-        global d_ages_ordered
-        # Delete from Listbox
-        selection = l.curselection()
-        if selection:
-            value = l.get(selection[0])
-            l.delete(selection[0])
-            # Delete from list that provided it
-            ind = int(d_ages.index(value))
-            del (d_ages[ind])
-            d_ages_ordered.append(value)
+        data = Data()
 
-    def delete_d_gender(self, l):
-        global d_genders
-        global d_genders_ordered
-        # Delete from Listbox
-        selection = l.curselection()
-        if selection:
-            value = l.get(selection[0])
-            l.delete(selection[0])
-            # Delete from list that provided it
-            ind = int(d_genders.index(value))
-            del (d_genders[ind])
-            d_genders_ordered.append(value)
+        patient_values, patient_pref, doctor_values, doctor_pref = data.read(file)
 
-    def application(self):
-        global p_ages
-        global p_ages_ordered
-        global p_types
-        global p_types_ordered
-        global d_genders
-        global d_genders_ordered
-        global d_ages
-        global d_ages_ordered
+        # Tree view for patient's values and preferences
+        Label(frame, text="Patients' Values and Preferences:", font='Helvetica 18 bold').grid(column=0, row=0, sticky=W)
+        patient_tree = Treeview(frame, columns=('Age', 'Illness Type', 'Preferred Doctor', 'Preferred Gender',
+                                                'Preferred Age Range'), height=4)
+        patient_tree.heading('Age', text='Age')
+        patient_tree.heading('Illness Type', text='Illness Type')
+        patient_tree.heading('Preferred Doctor', text='Preferred Doctor')
+        patient_tree.heading('Preferred Gender', text='Preferred Gender')
+        patient_tree.heading('Preferred Age Range', text='Preferred Age Range')
+        patient_tree.column('Age', minwidth=300, stretch=0, anchor=CENTER)
+        patient_tree.column('Illness Type', minwidth=300, stretch=0, anchor=CENTER)
+        patient_tree.column('Preferred Doctor', minwidth=300, stretch=0, anchor=CENTER)
+        patient_tree.column('Preferred Gender', minwidth=300, stretch=0, anchor=CENTER)
+        patient_tree.column('Preferred Age Range', minwidth=300, stretch=YES, anchor=CENTER)
 
-        window = Tk()
-        window.title("Advanced Stable Matching GUI")
-        window.geometry('1000x800')
+        for key, values in patient_values.items():
+            patient_tree.insert('', 'end', text="Patient_" + str(key),
+                                values=(values[0], values[1], patient_pref[key][0],
+                                        patient_pref[key][1],
+                                        patient_pref[key][2]))
 
-        scroll = Scrollbar(window, orient='vertical')
-        scroll.grid(column=10, rowspan=50, sticky=N + S)
+        # Scrollbar for the tree view
+        patient_vsb = Scrollbar(frame, orient="vertical", command=patient_tree.yview)
+        patient_vsb.grid(column=30, row=1, sticky='ns')
 
-        prompt = Label(window, text="Add another doctor and patient.", font='Helvetica 12 bold')
-        prompt.grid(column=0, row=0, columnspan=1, sticky=W)
+        patient_tree.configure(yscrollcommand=patient_vsb.set)
 
-        """Doctor values"""
-        d_prompt = Label(window, text="Add values to each doctor.", font='Helvetica 10 italic')
-        d_gender_lbl = Label(window, text="Gender of the doctor.")
-        gender_values = Label(window, text="0=male, 1=female, 2=other, and 3=neither.")
-        d_gender_combo = Combobox(window, width=5)
-        d_gender_combo['values'] = (0, 1, 2, 3)
-        d_age_lbl = Label(window, text="Age range of the doctor.")
-        d_age_combo = Combobox(window, width=5)
-        d_age_combo['values'] = ("30-40", "41-50", "51-60", "61-70", "71-80")
+        patient_tree.grid(column=0, row=1, columnspan=30, sticky='nsew')
 
-        d_prompt.grid(column=0, row=3, columnspan=1, rowspan=3, pady=15, sticky=W)
-        d_gender_lbl.grid(column=0, row=7, columnspan=1, sticky=W)
-        gender_values.grid(column=0, row=8, columnspan=1, sticky=W)
-        d_gender_combo.grid(column=1, row=7, columnspan=1, sticky=W)
-        d_age_lbl.grid(column=0, row=9, columnspan=1, sticky=W)
-        d_age_combo.grid(column=1, row=9, columnspan=1, sticky=W)
+        def weights_check(dv):
+            try:
+                if dv.get() > 100:
+                    dv.set(100)
+                elif dv.get() < 0:
+                    dv.set(0)
+            except (TclError, ValueError):
+                pass
 
-        """Doctor preferences"""
-        d_p_prompt = Label(window, text="Configure the doctor's preferences.", font='Helvetica 10 italic')
-        d_age_p_lbl = Label(window, text="Age of patients.")
-        d_age_b_lbl = Label(window, text="Click the 'Add' button.")
+        # Patient's Preferences
+        patient_age_weight_dv = DoubleVar()
+        patient_gender_weight_dv = DoubleVar()
+        patient_pref_weight_dv = DoubleVar()
 
-        # Age preferences
-        p_age_list = Listbox(window)
-        for e in p_ages:
-            p_age_list.insert(0, e)
+        patient_age_weight_dv.trace('w', lambda name, index, mode: weights_check(patient_age_weight_dv))
 
-        p_ages_button = Button(window, text="Add age", command=lambda: self.delete_p_age(p_age_list))
+        patient_gender_weight_dv.trace('w', lambda name, index, mode: weights_check(patient_gender_weight_dv))
 
-        # Illness preferences
-        p_illness_list = Listbox(window)
-        for e in p_types:
-            p_illness_list.insert(0, e)
+        patient_pref_weight_dv.trace('w', lambda name, index, mode: weights_check(patient_pref_weight_dv))
 
-        d_type_p_lbl = Label(window, text="Type of illness.")
-        d_type_b_lbl = Label(window, text="Click the 'Add' button.")
+        patient_age_weight_label = Label(frame, text="Enter Patient's Age Weight (0-100)%: ")
+        patient_age_weight_label.grid(column=0, row=6, sticky=W)
+        patient_age_weight_entry = Entry(frame, width=4, textvariable=patient_age_weight_dv)
+        patient_age_weight_entry.grid(column=1, row=6, sticky=W)
 
-        p_illness_button = Button(window, text="Add illness", command=lambda: self.delete_p_illness(p_illness_list))
+        patient_gender_weight_label = Label(frame, text="Enter Patient's Gender Weight (0-100)%: ")
+        patient_gender_weight_label.grid(column=0, row=7, sticky=W)
+        patient_gender_weight_entry = Entry(frame, width=4, textvariable=patient_gender_weight_dv)
+        patient_gender_weight_entry.grid(column=1, row=7, sticky=W)
 
-        d_p_prompt.grid(column=0, row=10, columnspan=1, rowspan=1, pady=15, sticky=W)
-        d_age_p_lbl.grid(column=0, row=11, columnspan=1, sticky=W)
-        d_age_b_lbl.grid(column=0, row=12, columnspan=1, sticky=W)
-        p_age_list.grid(column=0, row=13, sticky=W)
-        p_ages_button.grid(column=0, row=17, sticky=W)
-        d_type_p_lbl.grid(column=1, row=11, columnspan=1, sticky=W)
-        d_type_b_lbl.grid(column=1, row=12, columnspan=1, sticky=W)
-        p_illness_list.grid(column=1, row=13, sticky=W)
-        p_illness_button.grid(column=1, row=17, sticky=W)
+        patient_pref_weight_label = Label(frame, text="Enter Patient's Pref Weight (0-100)%: ")
+        patient_pref_weight_label.grid(column=0, row=8, sticky=W)
+        patient_pref_weight_entry = Entry(frame, width=4, textvariable=patient_pref_weight_dv)
+        patient_pref_weight_entry.grid(column=1, row=8, sticky=W)
 
-        # Separator for doctors/patients
-        Separator(window, orient=HORIZONTAL).grid(column=0, row=19, columnspan=3, sticky='ew')
+        # Tree view for doctors's values and preferences
+        Label(frame, text="Doctors' Values and Preferences:", font='Helvetica 18 bold').grid(column=0, row=9, sticky=W)
+        doctor_tree = Treeview(frame, columns=('Age', 'Gender', 'Preferred Patient', 'Preferred Age Range',
+                                               'Preferred Illness'), height=4)
+        doctor_tree.heading('Age', text='Age')
+        doctor_tree.heading('Gender', text='Gender')
+        doctor_tree.heading('Preferred Patient', text='Preferred Patient')
+        doctor_tree.heading('Preferred Age Range', text='Preferred Age Range')
+        doctor_tree.heading('Preferred Illness', text='Preferred Illness')
+        doctor_tree.column('Age', minwidth=300, stretch=0, anchor=CENTER)
+        doctor_tree.column('Gender', minwidth=300, stretch=0, anchor=CENTER)
+        doctor_tree.column('Gender', minwidth=300, stretch=0, anchor=CENTER)
+        doctor_tree.column('Preferred Patient', minwidth=300, stretch=0, anchor=CENTER)
+        doctor_tree.column('Preferred Age Range', minwidth=300, stretch=YES, anchor=CENTER)
+        doctor_tree.column('Preferred Illness', minwidth=300, stretch=0, anchor=CENTER)
 
-        """Patient values """
-        p_prompt = Label(window, text="Add values to each patient.", font='Helvetica 10 italic')
-        p_illness_lbl = Label(window, text="Illness type the patients has.")
-        p_illness_combo = Combobox(window, width=5)
-        p_illness_combo['values'] = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-        p_illness_help_lbl = Label(window, text="0-9 indicates sickness type.")
-        p_age_lbl = Label(window, text="Age range of the patient.")
-        p_age_combo = Combobox(window, width=5)
-        p_age_combo["values"] = ("0-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90",
-                                 "91-100", "100-110")
+        for key, values in doctor_values.items():
+            doctor_tree.insert('', 'end', text="Doctor_" + str(key), values=(values[0], values[1], doctor_pref[key][0],
+                                                                             doctor_pref[key][1],
+                                                                             doctor_pref[key][2]))
 
-        p_prompt.grid(column=0, row=19, columnspan=1, rowspan=3, pady=15, sticky=W)
-        p_illness_lbl.grid(column=0, row=24, columnspan=1, sticky=W)
-        p_illness_help_lbl.grid(column=0, row=25, columnspan=1, sticky=W)
-        p_illness_combo.grid(column=1, row=24, columnspan=1, sticky=W)
-        p_age_lbl.grid(column=0, row=26, columnspan=1, sticky=W)
-        p_age_combo.grid(column=1, row=26, columnspan=1, sticky=W)
+        # Scrollbar for the tree view
+        doctor_vsb = Scrollbar(frame, orient="vertical", command=doctor_tree.yview)
+        doctor_vsb.grid(column=30, row=10, sticky='ns')
 
-        """Patient values """
-        p_d_prompt = Label(window, text="Configure the patients's preferences.", font='Helvetica 10 italic')
+        doctor_tree.configure(yscrollcommand=doctor_vsb.set)
 
-        # Configure patient's preference for the age of doctors.
-        d_age_list = Listbox(window)
-        for e in d_ages:
-            d_age_list.insert(0, e)
+        doctor_tree.grid(column=0, row=10, columnspan=30, sticky='nsew')
 
-        p_age_d_lbl = Label(window, text="Age of doctors.")
-        p_age_b_lbl = Label(window, text="Click the 'Add' button.")
-        d_age_button = Button(window, text="Add age", command=lambda: self.delete_d_age(d_age_list))
+        # Doctors' preferences
+        doctor_age_weight_dv = DoubleVar()
+        doctor_illness_weight_dv = DoubleVar()
+        doctor_pref_weight_dv = DoubleVar()
 
-        # Configure patient's preference for the gender of doctors.
-        d_gender_list = Listbox(window)
-        for e in d_genders:
-            d_gender_list.insert(0, e)
+        doctor_age_weight_dv.trace('w', lambda name, index, mode: weights_check(doctor_age_weight_dv))
 
-        p_gender_d_lbl = Label(window, text="Gender of doctors.")
-        p_gender_b_lbl = Label(window, text="Click the 'Add' button.")
-        d_gender_button = Button(window, text="Add gender", command=lambda: self.delete_d_gender(d_gender_list))
+        doctor_illness_weight_dv.trace('w', lambda name, index, mode: weights_check(doctor_illness_weight_dv))
 
-        p_d_prompt.grid(column=0, row=27, columnspan=1, rowspan=1, pady=15, sticky=W)
+        doctor_pref_weight_dv.trace('w', lambda name, index, mode: weights_check(doctor_pref_weight_dv))
 
-        # Patient pref for age grids
-        p_age_d_lbl.grid(column=0, row=28, sticky=W)
-        d_age_list.grid(column=0, row=30, sticky=W)
-        p_age_b_lbl.grid(column=0, row=29, sticky=W)
-        d_age_button.grid(column=0, row=31, sticky=W)
+        doctor_age_weight_label = Label(frame, text="Enter Doctor's Age Weight (0-100)%: ")
+        doctor_age_weight_label.grid(column=28, row=6, sticky=E)
+        doctor_age_weight_entry = Entry(frame, width=4, textvariable=doctor_age_weight_dv)
+        doctor_age_weight_entry.grid(column=29, row=6, sticky=E)
 
-        # Patient pref for gender grids
-        p_gender_d_lbl.grid(column=1, row=28, sticky=W)
-        d_gender_list.grid(column=1, row=30, sticky=W)
-        p_gender_b_lbl.grid(column=1, row=29, sticky=W)
-        d_gender_button.grid(column=1, row=31, sticky=W)
+        doctor_gender_weight_label = Label(frame, text="Enter Doctor's Illness Weight (0-100)%: ")
+        doctor_gender_weight_label.grid(column=28, row=7, sticky=E)
+        doctor_gender_weight_entry = Entry(frame, width=4, textvariable=doctor_illness_weight_dv)
+        doctor_gender_weight_entry.grid(column=29, row=7, sticky=E)
 
-        window.mainloop()
+        doctor_pref_weight_label = Label(frame, text="Enter Doctor's Pref Weight (0-100)%: ")
+        doctor_pref_weight_label.grid(column=28, row=8, sticky=E)
+        doctor_pref_weight_entry = Entry(frame, width=4, textvariable=doctor_pref_weight_dv)
+        doctor_pref_weight_entry.grid(column=29, row=8, sticky=E)
+
+        # Results page
+        Label(frame, text="Matching Results:", font='Helvetica 18 bold').grid(column=0, row=12, sticky=W)
+        results_tree = Treeview(frame, columns=2, height=4)
+
+        results_tree.heading('#0', text='Doctor/Patient')
+        results_tree.heading('#1', text='Opposition Match')
+        results_tree.column('#1', minwidth=300, stretch=YES, anchor=CENTER)
+        results_tree.column('#0', minwidth=300, stretch=YES, anchor=CENTER)
+
+        # Scrollbar for the tree view
+        results_vsb = Scrollbar(frame, orient="vertical", command=results_tree.yview)
+        results_vsb.grid(column=30, row=13, sticky='ns')
+
+        results_tree.configure(yscrollcommand=results_vsb.set)
+
+        results_tree.grid(column=0, row=13, columnspan=30, sticky='nsew')
+
+        # Whether or not the returning was big 0
+        big_o_sv = StringVar()
+
+        # Handling the matching buttons
+        def match_doctor_button():
+            d_age_weight = doctor_age_weight_dv.get() / 100.0
+            d_illness_weight = doctor_illness_weight_dv.get() / 100.0
+            d_pref_weight = doctor_pref_weight_dv.get() / 100.0
+
+            p_age_weight = patient_age_weight_dv.get() / 100.0
+            p_gender_weight = patient_gender_weight_dv.get() / 100.0
+            p_pref_weight = patient_pref_weight_dv.get() / 100.0
+
+            if d_age_weight + d_illness_weight + d_pref_weight != 1 or p_age_weight + p_gender_weight + p_pref_weight != 1:
+                messagebox.showerror("Error", "Invalid Preference Weights")
+            else:
+                results_tree.delete(*results_tree.get_children())
+                algorithm = Algorithm()
+                percentages = Data().calc_percentages((patient_values, patient_pref, doctor_values, doctor_pref), (
+                    p_age_weight, p_gender_weight, p_pref_weight, d_illness_weight, d_age_weight, d_pref_weight))
+                results, proposals = algorithm.doctor_matching_algorithm(
+                    (patient_values, patient_pref, doctor_values, doctor_pref),
+                    percentages)
+
+                for key, value in results.items():
+                    results_tree.insert('', 'end', text="Doctor_" + str(key), values=("Patient_" + str(value)))
+
+                if proposals <= len(percentages[0]) ** 2:
+                    print("what1")
+                    big_o_sv.set("Algorithm is O(n^2). N = " + str(len(percentages[0])) + ". Proposals = " + str(
+                        proposals) + ". N^2 = " + str(len(percentages[0]) ** 2))
+                else:
+                    print("what2")
+                    big_o_sv.set("Algorithm is NOT O(n^2). N = " + str(len(percentages[0])) + ". Proposals = " + str(
+                        proposals) + ". N^2 = " + str(len(percentages[0]) ** 2))
+
+                del percentages
+                del results
+
+        def match_patient_button():
+            d_age_weight = doctor_age_weight_dv.get() / 100.0
+            d_illness_weight = doctor_illness_weight_dv.get() / 100.0
+            d_pref_weight = doctor_pref_weight_dv.get() / 100.0
+
+            p_age_weight = patient_age_weight_dv.get() / 100.0
+            p_gender_weight = patient_gender_weight_dv.get() / 100.0
+            p_pref_weight = patient_pref_weight_dv.get() / 100.0
+
+            if d_age_weight + d_illness_weight + d_pref_weight != 1 or p_age_weight + p_gender_weight + p_pref_weight != 1:
+                messagebox.showerror("Error", "Invalid Preference Weights")
+            else:
+                results_tree.delete(*results_tree.get_children())
+                algorithm = Algorithm()
+                percentages = Data().calc_percentages((patient_values, patient_pref, doctor_values, doctor_pref), (
+                    p_age_weight, p_gender_weight, p_pref_weight, d_illness_weight, d_age_weight, d_pref_weight))
+                results, proposals = algorithm.patient_matching_algorithm(
+                    (patient_values, patient_pref, doctor_values, doctor_pref),
+                    percentages)
+
+                for key, value in results.items():
+                    results_tree.insert('', 'end', text="Patient_" + str(key), values=("Doctor_" + str(value)))
+
+                if proposals <= len(percentages[0]) ** 2:
+                    big_o_sv.set("Algorithm is O(n^2). N = " + str(len(percentages[0])) + ". Proposals = " + str(
+                        proposals) + ". N^2 = " + str(len(percentages[0]) ** 2))
+                else:
+                    big_o_sv.set("Algorithm is NOT O(n^2). N = " + str(len(percentages[0])) + ". Proposals = " + str(
+                        proposals) + ". N^2 = " + str(len(percentages[0]) ** 2))
+
+                del percentages
+                del results
+
+        Label(frame, textvariable=big_o_sv, font='Helvetica 10 italic').grid(column=13, row=14, sticky=W + E)
+        Button(frame, text="Match Doctor -> Patient", command=match_doctor_button).grid(column=0, row=14, sticky=W)
+        Button(frame, text="Match Patient -> Doctor", command=match_patient_button).grid(column=29, row=14, sticky=E)
+
+        root.mainloop()
 
 
 if __name__ == '__main__':
-    GUI().application()
+    GUI().create_gui()

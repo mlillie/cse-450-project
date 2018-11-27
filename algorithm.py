@@ -7,9 +7,14 @@
 
 
 # Created by Matthew Lillie
-# Last edit: 11/20/18
+# Last edit: 11/26/18
+
+# Minor updates by Paul Witulski
+# Last edit: 11/25/18
 
 class Algorithm:
+    # private variable to keep track of number of swaps
+    swap_count = 0
 
     def doctor_matching_algorithm(self, data, percentages):
         proposals = 0
@@ -54,6 +59,7 @@ class Algorithm:
                                 patients_dict[p_id] = d_id
                                 matching[d_id] = p_id
                                 proposals += 1
+                                self.swap_count += 1
                                 print("Proposed: ", proposals)
                                 break  # The doctor has matched so we can break
         print("Doctor matches: ", matching)
@@ -61,7 +67,7 @@ class Algorithm:
             print("Algorithm is O(n^2). N = ", len(doctors_dict.keys()), ". Proposals = ", proposals)
         else:
             print("Algorithm is NOT O(n^2). N = ", len(doctors_dict.keys()), ". Proposals = ", proposals)
-        return matching
+        return matching, proposals
 
     def patient_matching_algorithm(self, data, percentages):
         proposals = 0
@@ -111,4 +117,7 @@ class Algorithm:
             print("Algorithm is O(n^2). N = ", len(doctors_dict.keys()), ". Proposals = ", proposals)
         else:
             print("Algorithm is NOT O(n^2). N = ", len(doctors_dict.keys()), ". Proposals = ", proposals)
-        return matching
+        return matching, proposals
+
+    def get_swap_count(self):
+        return self.swap_count

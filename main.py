@@ -14,10 +14,12 @@ from algorithm import Algorithm
 from data import Data
 from analysis import Analysis
 from matplotlib import pyplot
+from gui import GUI
 import datetime
 from matplotlib.dates import date2num
 
 if __name__ == '__main__':
+
 
     file_array = []
     # will add an iterator which will pass all files in test_cases folder to Data
@@ -32,6 +34,8 @@ if __name__ == '__main__':
     file_array.append(file_10)
     file_array.append(file_50)
     file_array.append(file_100)
+
+    # GUI().create_gui(file_100)
 
     # save the preference list read from the excel file
     y_points = []

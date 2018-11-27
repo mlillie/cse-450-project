@@ -10,6 +10,9 @@
 # Last Edit: 11/21/2018
 
 # TODO: Need to edit the read function to take any arbitrary excel file with any number of preferences.
+
+# Edited by: Matthew Lillie
+# Last Edit: 11/23/2018
 import operator
 
 import xlrd
@@ -164,7 +167,7 @@ class Data:
                                                    doctor_pref_patient_ids_length) * weights[5])
 
         # print(patient_percentages)
-        print(doctor_percentages)
+        # print(doctor_percentages)
 
         # Sort the nested dictionary by the value (percentage)
         patient_percentages = {key: dict(sorted(values.items(), key=operator.itemgetter(1), reverse=True)) for
