@@ -8,14 +8,20 @@
 # Created by Matthew Lillie
 # Last edit: 11/25/18
 
+# Minor updates by Paul Witulski
+# Last edit: 11/25/18
+
 from tkinter import *
 from tkinter import messagebox
 from tkinter.ttk import *
 from data import Data
 from algorithm import Algorithm
-
+from analysis import Analysis
 
 class GUI:
+
+    # create an single instance of Analysis
+    analysis = Analysis()
 
     def create_gui(self, file="\\test_cases\\100_pref_lists.xlsx"):
         root = Tk()
@@ -203,6 +209,9 @@ class GUI:
                     big_o_sv.set("Algorithm is NOT O(n^2). N = " + str(len(percentages[0])) + ". Proposals = " + str(
                         proposals) + ". N^2 = " + str(len(percentages[0]) ** 2))
 
+                # give analysis an instance of the current algorithm
+                self.analysis.plot_efficiency(__name__, algorithm, proposals)
+
                 del percentages
                 del results
 
@@ -238,6 +247,9 @@ class GUI:
 
                 del percentages
                 del results
+
+                # give analysis an instance of the current algorithm
+                self.analysis.plot_efficiency(__name__, algorithm, proposals)
 
         Label(frame, textvariable=big_o_sv, font='Helvetica 10 italic').grid(column=13, row=14, sticky=W + E)
         Button(frame, text="Match Doctor -> Patient", command=match_doctor_button).grid(column=0, row=14, sticky=W)

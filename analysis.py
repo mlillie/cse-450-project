@@ -10,66 +10,152 @@
 # Created By: Paul Witulski
 # Last Edit: 11/25/2018
 
-# TODO: Until we get enough data collected to plot and analysis the results of the algorithm.
-# TODO: Will try to get the functionality ready using sample data and update as progress happens.
-
-from matplotlib import pyplot
+from data import Data
+from algorithm import Algorithm
 import numpy as np
 import timeit
 from functools import partial
 import random
+import datetime
+from matplotlib import pyplot
 
 
 class Analysis:
+    # run count
+    run_count = 0
 
-    def plot_efficiency(self):
-        # used to plot the number of swaps
-        return
+    # build graph
+    x_points1 = []
+    y_points1 = []
+    x_points2 = []
+    y_points2 = []
 
-    def plot_time_complexity(self):
-        # used to plot the time it takes to complete the algorithm
-        return
+    # constructor
+    def __init__(self):
+        print('Analyzing Algorithm..')
 
-    def plot_space_complexity(self):
-        # used to plot amount of memory used to complete the algorithm
-        return
+    # used to analyze the algorithm given the initial test case files as a whole
+    def analyze_all(self, file_array):
+        # save the preference list read from the excel file
+        y_points = []
+        time_points = []
 
-    # def __init__(self):
-        # print('Analyzing Algorithms...')
+        # iterate over all the files
+        for file in file_array:
+            data = Data().read(file)
+            start_time = datetime.datetime.now()  # get the start time
+            algorithm = Algorithm()
+            algorithm.doctor_matching_algorithm(data, Data().calc_percentages(data))
+            end_time = datetime.datetime.now()  # get the end time
+            total_time = end_time - start_time
+            time_points.append(total_time.microseconds)
+            y_points.append(algorithm.get_swap_count())
 
-        # self.plotTC(fconst, 10, 1000, 10, 10)
-        # self.plotTC(flinear, 10, 1000, 10, 10)
-        # self.plotTC(fsquare, 10, 1000, 10, 10)
-        # plotTC(fshuffle, 10, 1000, 1000, 10)
-        # self.plotTC(fsort, 10, 1000, 10, 10)
+            pyplot.plot(total_time.microseconds, algorithm.get_swap_count(), 'o', label=file)
+            pyplot.legend(loc='upper left')
+
+            print("Total time: " + str(total_time) + '\n')
+            print("Total swap count: " + str(algorithm.get_swap_count()) + '\n')
+
+            # Algorithm().patient_matching_algorithm(data, Data().calc_percentages(data))
+            # then the returned preference lists from Data will be given to Algorithms
+
+            # debugging
+            # print("Total swap count: " + str(algorithm.get_swap_count()) + '\n')
 
         # show plot
-        # pyplot.show()
+        pyplot.title('Time Complexity Analysis')
+        pyplot.xlabel('Time to execute (microseconds)')
+        pyplot.ylabel('# of swaps')
+        pyplot.plot(time_points, y_points, 'k', alpha=0.2)
+        pyplot.show()
 
-    def fconst(self, N):
+    # used to analyze the algorithm given the initial test case files as a whole
+    def analyze_individual(self, file_array):
+        # save the preference list read from the excel file
+        y_points = []
+        time_points = []
+
+        # iterate over all the files
+        for file in file_array:
+            data = Data().read(file)
+            start_time = datetime.datetime.now()  # get the start time
+            algorithm = Algorithm()
+            algorithm.doctor_matching_algorithm(data, Data().calc_percentages(data))
+            end_time = datetime.datetime.now()  # get the end time
+            total_time = end_time - start_time
+            time_points.append(total_time.microseconds)
+            y_points.append(algorithm.get_swap_count())
+
+            pyplot.plot(total_time.microseconds, algorithm.get_swap_count(), 'o', label=file)
+            pyplot.legend(loc='upper left')
+
+            print("Total time: " + str(total_time) + '\n')
+            print("Total swap count: " + str(algorithm.get_swap_count()) + '\n')
+
+            # show plot
+            #pyplot.yticks(y_points)
+            pyplot.title('Time Complexity Analysis')
+            pyplot.xlabel('Time to execute (microseconds)')
+            pyplot.ylabel('# of swaps')
+            pyplot.plot(time_points, y_points, 'k', alpha=0.2)
+            pyplot.show()
+
+    # used to plot the number of swaps
+    def plot_efficiency(self, __name__, algorithm, proposals):
+        self.run_count += 1;
+        print(str(self.run_count))
+
+        pyplot.title('Performance Analysis')
+        pyplot.xlabel('Instance Run Count')
+
+        self.x_points1.append(self.run_count)
+        self.y_points1.append(proposals)
+        pyplot.plot(self.x_points1, self.y_points1, 'o', label='Proposals')
+
+        self.x_points2.append(self.run_count)
+        self.y_points2.append(algorithm.get_swap_count())
+        pyplot.plot(self.x_points2, self.y_points2, 'o', label='Swaps')
+
+        pyplot.legend(loc='upper left')
+        pyplot.xticks(self.x_points1)
+        pyplot.show()
+
+        return
+
+    def show_plot(self):
+        self.performance_plot.show()
+
+    # for reference
+    def fconst(self, n):
         # O(1) function
-        x = 1
+        x = n
 
-    def flinear(self, N):
+    # for reference
+    def flinear(self, n):
         # O(n) function
-        x = [i for i in range(N)]
+        x = [i for i in range(n)]
 
-    def fsquare(self, N):
+    # for reference
+    def fsquare(self, n):
         # O(n^2) function
-        for i in range(N):
-            for j in range(N):
+        for i in range(n):
+            for j in range(n):
                 x = i*j
 
-    def fshuffle(self, N):
+    # for reference
+    def fshuffle(self, n):
         # O(N)
-        random.shuffle(list(range(N)))
+        random.shuffle(list(range(n)))
 
-    def fsort(self, N):
-        x = list(range(N))
+    # for reference
+    def fsort(self, n):
+        x = list(range(n))
         random.shuffle(x)
         x.sort()
 
-    def plotTC(self, fn, nMin, nMax, nInc, nTests):
+    # for reference
+    def plottest(self, fn, nMin, nMax, nInc, nTests):
         # Run timer and plot time complexity
         x = []
         y = []
@@ -79,7 +165,4 @@ class Analysis:
             t = testNTimer.timeit(number=nTests)
             x.append(i)
             y.append(t)
-        p1 = pyplot.plot(x, y, 'o', label = fn.__name__)
-        pyplot.legend(loc = 'upper left')
-        #pyplot.legend([p1,], [fn.__name__, ])
-
+        pyplot.legend(loc='upper left')

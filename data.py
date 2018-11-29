@@ -9,12 +9,10 @@
 # Created By: Jacky Fonseca
 # Last Edit: 11/21/2018
 
-# TODO: Need to edit the read function to take any arbitrary excel file with any number of preferences.
-
 # Edited by: Matthew Lillie
 # Last Edit: 11/23/2018
-import operator
 
+import operator
 import xlrd
 import os
 
