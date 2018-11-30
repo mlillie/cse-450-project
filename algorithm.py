@@ -40,7 +40,7 @@ class Algorithm:
                             patients_dict[p_id] = d_id
                             matching[d_id] = p_id
                             proposals += 1
-                            print("Proposed: ", proposals)
+                            # print("Proposed: ", proposals)
                             break  # The doctor has matched so we can break
                         else:
                             # If it is, check the percentage calculation of the patient prefs to determine if we should
@@ -60,7 +60,7 @@ class Algorithm:
                                 matching[d_id] = p_id
                                 proposals += 1
                                 self.swap_count += 1
-                                print("Proposed: ", proposals)
+                                # print("Proposed: ", proposals)
                                 break  # The doctor has matched so we can break
         print("Doctor matches: ", matching)
         if proposals <= len(doctors_dict.keys())**2:
@@ -110,7 +110,7 @@ class Algorithm:
                                 doctors_dict[d_id] = p_id
                                 matching[p_id] = d_id
                                 proposals += 1
-                                print("Proposed: ", proposals)
+                                # print("Proposed: ", proposals)
                                 break  # The doctor has matched so we can break
         print("Patient matches: ", matching)
         if proposals <= len(doctors_dict.keys())**2:

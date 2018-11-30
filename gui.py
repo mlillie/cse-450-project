@@ -18,6 +18,7 @@ from data import Data
 from algorithm import Algorithm
 from analysis import Analysis
 
+
 class GUI:
 
     # create an single instance of Analysis

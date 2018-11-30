@@ -90,11 +90,6 @@ class Data:
                 # adds preferences to dictionary
                 doctor_pref[j - 1] = (dt1, age_range, dt3)
 
-        # print(patient_values)
-        # print(doctor_values)
-        # print(patient_pref)
-        # print(doctor_pref)
-
         return patient_values, patient_pref, doctor_values, doctor_pref
 
     def calc_percentages(self, data, weights=(PATIENT_AGE_WEIGHT, PATIENT_GENDER_WEIGHT,
@@ -164,8 +159,6 @@ class Data:
                                                  (((doctor_pref_patient_ids_length - patient_pref_index) /
                                                    doctor_pref_patient_ids_length) * weights[5])
 
-        # print(patient_percentages)
-        # print(doctor_percentages)
 
         # Sort the nested dictionary by the value (percentage)
         patient_percentages = {key: dict(sorted(values.items(), key=operator.itemgetter(1), reverse=True)) for

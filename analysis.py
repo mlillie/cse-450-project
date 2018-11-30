@@ -12,7 +12,6 @@
 
 from data import Data
 from algorithm import Algorithm
-import numpy as np
 import timeit
 from functools import partial
 import random
@@ -94,7 +93,7 @@ class Analysis:
             print("Total swap count: " + str(algorithm.get_swap_count()) + '\n')
 
             # show plot
-            #pyplot.yticks(y_points)
+            # pyplot.yticks(y_points)
             pyplot.title('Time Complexity Analysis')
             pyplot.xlabel('Time to execute (microseconds)')
             pyplot.ylabel('# of swaps')

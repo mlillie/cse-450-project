@@ -8,14 +8,10 @@
 #   3. Perform the analysis of the algorithm, account for efficiency, time, space (Analysis class)
 
 # Team Members: Matthew Lillie, Jacky Fonseca, Paul Witulski
-# Last edit: 11/25/18
+# Last edit: 11/29/18
 
 from analysis import Analysis
 from gui import GUI
-from algorithm import Algorithm
-from data import Data
-import datetime
-from matplotlib import pyplot
 
 
 if __name__ == '__main__':
@@ -39,7 +35,7 @@ if __name__ == '__main__':
     # pass the files to the Analysis class and run algorithm
     analysis = Analysis()
 
-    #show analysis of file array
+    # show analysis of file array
     analysis.analyze_all(file_array)
     analysis.analyze_individual(file_array)
 
